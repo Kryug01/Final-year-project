@@ -5,43 +5,22 @@ import {
 } from "@tanstack/react-router"
 
 import App from "./App"
-import Login from "./routes/login"
 
-// ✅ Auth imports
-import { useAuth } from "./lib/auth-context"
-import { useNavigate } from "@tanstack/react-router"
-import { useEffect } from "react"
+import HomePage from "./routes/index"
+import Login from "./routes/login"
 import Dashboard from "./routes/dashboard"
 import ProjectWorkspace from "./routes/project"
-
-// 🔐 Protected Home Component
-const Home = () => {
-  const { user } = useAuth()
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    if (!user) {
-      navigate({ to: "/login" })
-    }
-  }, [user, navigate])
-
-  return (
-    <div className="p-5 text-white">
-      Dashboard (Protected)
-    </div>
-  )
-}
 
 // 🌳 Root Route
 const rootRoute = createRootRoute({
   component: App,
 })
 
-// 🏠 Home Route (Protected)
+// 🏠 Public Landing Page
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-  component: Dashboard,
+  component: HomePage,
 })
 
 // 🔐 Login Route
@@ -51,7 +30,14 @@ const loginRoute = createRoute({
   component: Login,
 })
 
-// 💻 Project Route
+// 📁 Dashboard Route
+const dashboardRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/dashboard",
+  component: Dashboard,
+})
+
+// 💻 Project Workspace Route
 const projectRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/project/$id",
@@ -62,6 +48,7 @@ const projectRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   loginRoute,
+  dashboardRoute,
   projectRoute,
 ])
 
