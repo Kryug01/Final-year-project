@@ -4,7 +4,8 @@ import { supabase } from "../integrations/supabase/client"
 const AuthContext = createContext<any>(null)
 
 export function AuthProvider({ children }: any) {
-  const [user, setUser] = useState(null)
+  import type { User } from "@supabase/supabase-js"
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
